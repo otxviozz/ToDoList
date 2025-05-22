@@ -2,22 +2,27 @@ package main;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JScrollBar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Application extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
+	String path = "C:\\Users\\eletr\\eclipse-workspace\\ToDoListJava\\dados\\tarefas.csv";
+	ArrayList<String> tarefas = new ArrayList<>();
 	/**
 	 * Launch the application.
 	 */
@@ -67,6 +72,16 @@ public class Application extends JFrame {
 		btnSalvar.setBounds(464, 64, 100, 40);
 		contentPane.add(btnSalvar);
 		
+		JTextField campoTarefa = new JTextField();
+		campoTarefa.setBounds(48, 127, 486, 30);
+		campoTarefa.setVisible(false);
+		contentPane.add(campoTarefa);
+
+		JButton botaoConfirmar = new JButton("Confirmar");
+		botaoConfirmar.setBounds(544, 127, 150, 30);
+		botaoConfirmar.setVisible(false);
+		contentPane.add(botaoConfirmar);
+		
 		JButton btnSair = new JButton("SAIR");
 		btnSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -75,5 +90,16 @@ public class Application extends JFrame {
 		});
 		btnSair.setBounds(605, 11, 89, 23);
 		contentPane.add(btnSair);
+		
+		JPanel painelTarefas = new JPanel();
+		painelTarefas.setLayout(new BoxLayout(painelTarefas, BoxLayout.Y_AXIS));
+		painelTarefas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		JScrollPane scrollPane = new JScrollPane(painelTarefas);
+		scrollPane.setBounds(48, 168, 646, 282);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		contentPane.add(scrollPane);
 	}
 }
