@@ -4,6 +4,9 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -23,6 +26,7 @@ public class Application extends JFrame {
 	private JPanel contentPane;
 	String path = "C:\\Users\\eletr\\eclipse-workspace\\ToDoListJava\\dados\\tarefas.csv";
 	ArrayList<String> tarefas = new ArrayList<>();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -43,15 +47,51 @@ public class Application extends JFrame {
 	 * Create the frame.
 	 */
 	public Application() {
+		tarefas.add("Tarefas a serem feitas");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 720, 500);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		JTextField campoTarefa = new JTextField();
+		campoTarefa.setBounds(48, 127, 486, 30);
+		campoTarefa.setVisible(false);
+		contentPane.add(campoTarefa);
+		
+		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String inserir = campoTarefa.getText().trim();
+
+				if (!inserir.isEmpty() && !inserir.equals("Insira a tarefa")) {
+					tarefas.add(inserir);
+
+					System.out.println("Tarefa adicionada: " + inserir);
+
+					campoTarefa.setText("");
+					campoTarefa.setVisible(false);
+					btnConfirmar.setVisible(false);
+				} else {
+					javax.swing.JOptionPane.showMessageDialog(null, "Digite uma tarefa válida.");
+				}
+			}
+		});
+		btnConfirmar.setBounds(544, 127, 150, 30);
+		btnConfirmar.setVisible(false);
+		contentPane.add(btnConfirmar);
+		
 		JButton btnInserir = new JButton("Inserir");
+		btnInserir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				campoTarefa.setVisible(true);
+				btnConfirmar.setVisible(true);
+				btnConfirmar.setText("Inserir");
+			}
+		});
 		btnInserir.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnInserir.setBounds(139, 64, 100, 40);
 		contentPane.add(btnInserir);
@@ -68,19 +108,24 @@ public class Application extends JFrame {
 		contentPane.add(btnCarregar);
 		
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+		            for (String linha : tarefas) {
+		                bw.write(linha);
+		                bw.newLine();
+		            }
+		            javax.swing.JOptionPane.showMessageDialog(null, "Tarefas salvas com sucesso!");
+		        } catch (IOException ex) {
+		            System.out.println("Erro ao salvar: " + ex.getMessage());
+		            javax.swing.JOptionPane.showMessageDialog(null, "Erro ao salvar tarefas.");
+		        }
+		    }
+		});
 		btnSalvar.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnSalvar.setBounds(464, 64, 100, 40);
 		contentPane.add(btnSalvar);
-		
-		JTextField campoTarefa = new JTextField();
-		campoTarefa.setBounds(48, 127, 486, 30);
-		campoTarefa.setVisible(false);
-		contentPane.add(campoTarefa);
 
-		JButton botaoConfirmar = new JButton("Confirmar");
-		botaoConfirmar.setBounds(544, 127, 150, 30);
-		botaoConfirmar.setVisible(false);
-		contentPane.add(botaoConfirmar);
 		
 		JButton btnSair = new JButton("SAIR");
 		btnSair.addActionListener(new ActionListener() {
