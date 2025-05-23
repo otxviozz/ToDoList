@@ -1,6 +1,8 @@
 package main;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +32,14 @@ public class Application extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JTextField campoTarefa;
+	private JButton btnConfirmar;
+	private JRadioButton rdbtnNaoIniciado;
+	private JRadioButton rdbtnEmAndamento;
+	private JRadioButton rdbtnConcluido;
+	private JPanel painelStatus;
+	private JLabel lblStatus;
+	private JPanel painelTarefas;
 	String path = "C:\\Users\\Aluno\\Desktop\\repositorio\\ToDoList\\dados\\tarefas.csv";
 	ArrayList<String> tarefas = new ArrayList<>();
 	
@@ -48,6 +58,87 @@ public class Application extends JFrame {
 			}
 		});
 	}
+	
+	private void atualizarPainelTarefas(JPanel painelTarefas) {
+		painelTarefas.removeAll();
+		for (int i = 1; i < tarefas.size(); i++) {
+		    String tarefa = tarefas.get(i);
+		    String[] partes = tarefa.split(",");
+
+		    JPanel linha = new JPanel(new BorderLayout());
+		    linha.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+		    JLabel lblTarefa = new JLabel(tarefa);
+		    lblTarefa.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		    lblTarefa.setVerticalAlignment(SwingConstants.TOP);
+		    linha.add(lblTarefa, BorderLayout.WEST);
+
+		    JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+		    JButton btnEditar = new JButton("Editar");
+		    JButton btnRemover = new JButton("Remover");
+		    painelBotoes.add(btnEditar);
+		    painelBotoes.add(btnRemover);
+		    linha.add(painelBotoes, BorderLayout.EAST);
+		    
+		    int index = i;
+		    
+		    btnEditar.addActionListener(e -> {
+		        String tarefaAtual = tarefas.get(index);
+		        System.out.println("Tarefa atual bruta: '" + tarefaAtual + "'");
+		        System.out.println("partes.length = " + partes.length);
+
+		        if (partes.length == 2) {
+		            String tarefaAntiga = partes[0];
+		            String statusAntigo = partes[1];
+		            System.out.println("Tarefa: " + tarefaAntiga + " | Status: " + statusAntigo);
+
+		            campoTarefa.setText(tarefaAntiga);
+		            switch (statusAntigo) {
+		                case "Não iniciado": rdbtnNaoIniciado.setSelected(true); break;
+		                case "Em andamento": rdbtnEmAndamento.setSelected(true); break;
+		                case "Concluído": rdbtnConcluido.setSelected(true); break;
+		            }
+
+		            lblStatus.setVisible(false);
+		            campoTarefa.setVisible(true);
+		            painelStatus.setVisible(true);
+		            btnConfirmar.setVisible(true);
+		            btnConfirmar.setText("Atualizar");
+
+		            for (ActionListener al : btnConfirmar.getActionListeners()) {
+		                btnConfirmar.removeActionListener(al);
+		            }
+
+		            btnConfirmar.addActionListener(ev -> {
+		                String novoTexto = campoTarefa.getText().trim();
+		                String novoStatus = rdbtnNaoIniciado.isSelected() ? rdbtnNaoIniciado.getText() :
+		                                    rdbtnEmAndamento.isSelected() ? rdbtnEmAndamento.getText() :
+		                                    rdbtnConcluido.getText();
+		                String novaTarefa = novoTexto + ", " + novoStatus;
+		                tarefas.set(index, novaTarefa);
+		                atualizarPainelTarefas(painelTarefas);
+
+		                campoTarefa.setText("");
+		                campoTarefa.setVisible(false);
+		                painelStatus.setVisible(false);
+		                btnConfirmar.setVisible(false);
+		            });
+		        } else {
+		            System.out.println("Formato inválido para: " + tarefaAtual);
+		        }
+		    });
+		    
+		    btnRemover.addActionListener(e -> {
+		        tarefas.remove(index); // remove a tarefa correspondente
+		        atualizarPainelTarefas(painelTarefas); // atualiza a interface
+		    });
+		    
+		    painelTarefas.add(linha);
+		}
+
+		painelTarefas.revalidate();
+		painelTarefas.repaint();
+	}
 
 	/**
 	 * Create the frame.
@@ -63,11 +154,22 @@ public class Application extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JRadioButton rdbtnNaoIniciado = new JRadioButton("Não iniciado");
+		JPanel painelTarefas = new JPanel();
+		painelTarefas.setLayout(new BoxLayout(painelTarefas, BoxLayout.Y_AXIS));
+		painelTarefas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		JScrollPane scrollPane = new JScrollPane(painelTarefas);
+		scrollPane.setBounds(48, 250, 646, 282);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		contentPane.add(scrollPane);
+		
+		rdbtnNaoIniciado = new JRadioButton("Não iniciado");
 		rdbtnNaoIniciado.setBounds(0, 0, 120, 40); 
-		JRadioButton rdbtnEmAndamento = new JRadioButton("Em andamento");
+		rdbtnEmAndamento = new JRadioButton("Em andamento");
 		rdbtnEmAndamento.setBounds(130, 0, 130, 40);
-		JRadioButton rdbtnConcluido = new JRadioButton("Concluído");
+		rdbtnConcluido = new JRadioButton("Concluído");
 		rdbtnConcluido.setBounds(270, 0, 100, 40);
 
 		ButtonGroup grupoStatus = new ButtonGroup();
@@ -75,7 +177,7 @@ public class Application extends JFrame {
 		grupoStatus.add(rdbtnEmAndamento);
 		grupoStatus.add(rdbtnConcluido);
 
-		JPanel painelStatus = new JPanel();
+		painelStatus = new JPanel();
 		painelStatus.setLayout(null);
 		painelStatus.setBounds(48, 179, 415, 42);
 
@@ -85,19 +187,19 @@ public class Application extends JFrame {
 		painelStatus.setVisible(false);
 		contentPane.add(painelStatus);
 		
-		JTextField campoTarefa = new JTextField();
+		campoTarefa = new JTextField();
 		campoTarefa.setBounds(48, 127, 415, 30);
 		campoTarefa.setVisible(false);
 		contentPane.add(campoTarefa);
 
-		JLabel lblStatus = new JLabel("");
+		lblStatus = new JLabel("");
 		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblStatus.setBounds(48, 153, 415, 42);
 		lblStatus.setVisible(false);
 		contentPane.add(lblStatus);
 		
-		JButton btnConfirmar = new JButton("Confirmar");
+		btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String statusSelecionado = "";
@@ -114,6 +216,7 @@ public class Application extends JFrame {
 
 				if (!inserir.isEmpty() && !inserir.equals("Insira a tarefa")) {
 					tarefas.add(inserir);
+					atualizarPainelTarefas(painelTarefas);
 
 					System.out.println("Tarefa adicionada: " + inserir);
 					lblStatus.setVisible(true);
@@ -131,6 +234,7 @@ public class Application extends JFrame {
 		});
 		btnConfirmar.setBounds(516, 151, 150, 30);
 		btnConfirmar.setVisible(false);
+		atualizarPainelTarefas(painelTarefas);
 		contentPane.add(btnConfirmar);
 		
 		JButton btnInserir = new JButton("Inserir");
@@ -156,6 +260,10 @@ public class Application extends JFrame {
 		JButton btnCarregar = new JButton("Carregar");
 		btnCarregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				campoTarefa.setVisible(false);
+				painelStatus.setVisible(false);
+				lblStatus.setVisible(false);
+				btnConfirmar.setVisible(false);
 				JFileChooser fileChooser = new JFileChooser();
 				int resultado = fileChooser.showOpenDialog(null);
 
@@ -165,8 +273,8 @@ public class Application extends JFrame {
 					path = caminhoArquivo;
 
 					System.out.println("Arquivo escolhido: " + caminhoArquivo);
-					lblStatus.setVisible(true);
 					lblStatus.setText("Arquivo carregado com sucesso!");
+					lblStatus.setVisible(true);
 
 					FileReader fr = null;
 					BufferedReader br = null;
@@ -182,6 +290,7 @@ public class Application extends JFrame {
 							tarefas.add(linha);
 							linha = br.readLine();
 						}
+						atualizarPainelTarefas(painelTarefas);
 					} catch (IOException ex) {
 						System.out.println("Erro: " + ex.getMessage());
 					} finally {
@@ -229,17 +338,6 @@ public class Application extends JFrame {
 		});
 		btnSair.setBounds(605, 11, 89, 23);
 		contentPane.add(btnSair);
-		
-		JPanel painelTarefas = new JPanel();
-		painelTarefas.setLayout(new BoxLayout(painelTarefas, BoxLayout.Y_AXIS));
-		painelTarefas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		JScrollPane scrollPane = new JScrollPane(painelTarefas);
-		scrollPane.setBounds(48, 250, 646, 282);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-		contentPane.add(scrollPane);
 		
 	}
 }
