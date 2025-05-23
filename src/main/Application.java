@@ -111,7 +111,7 @@ public class Application extends JFrame {
 		                String novoStatus = rdbtnNaoIniciado.isSelected() ? rdbtnNaoIniciado.getText() :
 		                                    rdbtnEmAndamento.isSelected() ? rdbtnEmAndamento.getText() :
 		                                    rdbtnConcluido.getText();
-		                String novaTarefa = novoTexto + ", " + novoStatus;
+		                String novaTarefa = novoTexto + "," + novoStatus;
 		                tarefas.set(index, novaTarefa);
 		                atualizarPainelTarefas(painelTarefas);
 
