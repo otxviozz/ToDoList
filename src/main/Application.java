@@ -39,7 +39,6 @@ public class Application extends JFrame {
 	private JRadioButton rdbtnConcluido;
 	private JPanel painelStatus;
 	private JLabel lblStatus;
-	private JPanel painelTarefas;
 	String path = "C:\\Users\\Aluno\\Desktop\\repositorio\\ToDoList\\dados\\tarefas.csv";
 	ArrayList<String> tarefas = new ArrayList<>();
 	
@@ -84,13 +83,11 @@ public class Application extends JFrame {
 		    
 		    btnEditar.addActionListener(e -> {
 		        String tarefaAtual = tarefas.get(index);
-		        System.out.println("Tarefa atual bruta: '" + tarefaAtual + "'");
-		        System.out.println("partes.length = " + partes.length);
 
 		        if (partes.length == 2) {
 		            String tarefaAntiga = partes[0];
 		            String statusAntigo = partes[1];
-		            System.out.println("Tarefa: " + tarefaAntiga + " | Status: " + statusAntigo);
+		            
 
 		            campoTarefa.setText(tarefaAntiga);
 		            switch (statusAntigo) {
@@ -129,8 +126,8 @@ public class Application extends JFrame {
 		    });
 		    
 		    btnRemover.addActionListener(e -> {
-		        tarefas.remove(index); // remove a tarefa correspondente
-		        atualizarPainelTarefas(painelTarefas); // atualiza a interface
+		        tarefas.remove(index);
+		        atualizarPainelTarefas(painelTarefas);
 		    });
 		    
 		    painelTarefas.add(linha);
@@ -212,7 +209,7 @@ public class Application extends JFrame {
 				    statusSelecionado = rdbtnConcluido.getText();
 				}
 
-				String inserir = campoTarefa.getText().trim() + ", " + statusSelecionado;
+				String inserir = campoTarefa.getText().trim() + "," + statusSelecionado;
 
 				if (!inserir.isEmpty() && !inserir.equals("Insira a tarefa")) {
 					tarefas.add(inserir);
@@ -311,17 +308,24 @@ public class Application extends JFrame {
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
-		            for (String linha : tarefas) {
-		                bw.write(linha);
-		                bw.newLine();
+		        JFileChooser fileChooser = new JFileChooser();
+		        int resultado = fileChooser.showSaveDialog(null);
+
+		        if (resultado == JFileChooser.APPROVE_OPTION) {
+		            File arquivoSelecionado = fileChooser.getSelectedFile();
+		            path = arquivoSelecionado.getAbsolutePath();
+
+		            try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+		                for (String linha : tarefas) {
+		                    bw.write(linha);
+		                    bw.newLine();
+		                }
+		                javax.swing.JOptionPane.showMessageDialog(null, "Tarefas salvas com sucesso!");
+		                lblStatus.setVisible(false);
+		                lblStatus.setText("");
+		            } catch (IOException ex) {
+		                javax.swing.JOptionPane.showMessageDialog(null, "Erro ao salvar tarefas!");
 		            }
-		            javax.swing.JOptionPane.showMessageDialog(null, "Tarefas salvas com sucesso!");
-		            lblStatus.setVisible(false);
-					lblStatus.setText("");
-		        } catch (IOException ex) {
-		            System.out.println("Erro ao salvar: " + ex.getMessage());
-		            javax.swing.JOptionPane.showMessageDialog(null, "Erro ao salvar tarefas.");
 		        }
 		    }
 		});
@@ -338,6 +342,5 @@ public class Application extends JFrame {
 		});
 		btnSair.setBounds(605, 11, 89, 23);
 		contentPane.add(btnSair);
-		
 	}
 }
