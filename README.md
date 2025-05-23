@@ -43,3 +43,13 @@ Salvamento das tarefas em arquivo CSV com FileWriter e BufferedWriter.
 Leitura de tarefas com FileReader e BufferedReader ou Scanner.
 
 Utilização de try-with-resources para garantir o fechamento seguro de arquivos.
+
+
+
+Maneira que o aplicativo funciona:
+
+Na pasta "main" fica minha classe Application, que é onde foi criado toda a interface e sets iniciais das coisas, como botões visíveis ou não, entre outros. 
+Para os botões Inserir, Carregar e Salvar, foram feitas funções para fazer os processos em classes separadas, por organização.
+
+As classes separadas fazem as lógicas de inserir, carregar e salvar. Elas também chamam funções de "Show" que mudam o que está visível ou não, além de abrir
+o explorador de arquivos lá.
