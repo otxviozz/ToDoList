@@ -39,7 +39,7 @@ public class Application extends JFrame {
 	private JRadioButton rdbtnConcluido;
 	private JPanel painelStatus;
 	private JLabel lblStatus;
-	String path = "C:\\Users\\Aluno\\Desktop\\repositorio\\ToDoList\\dados\\tarefas.csv";
+	String path="";
 	ArrayList<String> tarefas = new ArrayList<>();
 	
 	/**
@@ -261,6 +261,7 @@ public class Application extends JFrame {
 				painelStatus.setVisible(false);
 				lblStatus.setVisible(false);
 				btnConfirmar.setVisible(false);
+
 				JFileChooser fileChooser = new JFileChooser();
 				int resultado = fileChooser.showOpenDialog(null);
 
@@ -273,30 +274,31 @@ public class Application extends JFrame {
 					lblStatus.setText("Arquivo carregado com sucesso!");
 					lblStatus.setVisible(true);
 
-					FileReader fr = null;
-					BufferedReader br = null;
-
-					try {
-						fr = new FileReader(path);
-						br = new BufferedReader(fr);
+					try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 						tarefas.clear();
+						String linha;
 
-						String linha = br.readLine();
-						while (linha != null) {
-							System.out.println(linha);
-							tarefas.add(linha);
-							linha = br.readLine();
+						while ((linha = br.readLine()) != null) {
+							linha = linha.trim();
+							String[] partes = linha.split(",");
+
+							if (partes.length == 2) {
+								String tarefa = partes[0].trim();
+								String status = partes[1].trim();
+
+								if (!tarefa.isEmpty() && !status.isEmpty()) {
+									tarefas.add(tarefa + "," + status);
+								} else {
+									System.out.println("Linha ignorada (campos vazios): " + linha);
+								}
+							} else {
+								System.out.println("Linha ignorada (formato inválido): " + linha);
+							}
 						}
+
 						atualizarPainelTarefas(painelTarefas);
 					} catch (IOException ex) {
-						System.out.println("Erro: " + ex.getMessage());
-					} finally {
-						try {
-							if (fr != null) fr.close();
-							if (br != null) br.close();
-						} catch (IOException ex) {
-							ex.printStackTrace();
-						}
+						System.out.println("Erro ao ler o arquivo: " + ex.getMessage());
 					}
 				}
 			}
