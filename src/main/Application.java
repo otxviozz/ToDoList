@@ -36,6 +36,8 @@ import procedures.Salvar;
 import procedures.Editar;
 import procedures.Remover;
 
+import show.ShowInserir;
+
 public class Application extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -169,35 +171,7 @@ public class Application extends JFrame {
 		
 		btnInserir.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        // Limpa e mostra os campos
-		        campoTarefa.setText("");
-		        campoTarefa.setVisible(true);
-
-		        rdbtnNaoIniciado.setSelected(true);
-		        painelStatus.setVisible(true);
-
-		        lblStatus.setVisible(false);
-
-		        btnConfirmar.setText("Confirmar");
-		        btnConfirmar.setVisible(true);
-
-		        // Remove ações anteriores
-		        for (ActionListener al : btnConfirmar.getActionListeners()) {
-		            btnConfirmar.removeActionListener(al);
-		        }
-
-		        // Adiciona a ação para confirmar inserção
-		        btnConfirmar.addActionListener(new ActionListener() {
-		            public void actionPerformed(ActionEvent ev) {
-		                Inserir.inserirTarefa(campoTarefa, rdbtnNaoIniciado, rdbtnEmAndamento, rdbtnConcluido, tarefas, lblStatus, painelTarefas);
-
-		                // Esconde campos depois de salvar
-		                campoTarefa.setText("");
-		                campoTarefa.setVisible(false);
-		                painelStatus.setVisible(false);
-		                btnConfirmar.setVisible(false);
-		            }
-		        });
+		    	ShowInserir.AparecerInserir(campoTarefa, rdbtnNaoIniciado, rdbtnEmAndamento, rdbtnConcluido, painelStatus, lblStatus, btnConfirmar, tarefas, painelTarefas);
 		    }
 		});
 		
