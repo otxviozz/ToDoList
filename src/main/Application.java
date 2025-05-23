@@ -1,24 +1,16 @@
 package main;
 
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,14 +20,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-
 import procedures.AtualizarPainel;
-import procedures.Inserir;
 import procedures.Carregar;
 import procedures.Salvar;
-import procedures.Editar;
-import procedures.Remover;
-
 import show.ShowInserir;
 
 public class Application extends JFrame {
@@ -48,9 +35,10 @@ public class Application extends JFrame {
 	public static JRadioButton rdbtnEmAndamento;
 	public static JRadioButton rdbtnConcluido;
 	public static JPanel painelStatus;
-	public static JLabel lblStatus;
 	public static String path = "";
 	public static ArrayList<String> tarefas = new ArrayList<>();
+	public static JLabel lblStatus = new JLabel();
+	
 	public static JPanel painelTarefas;
 	
 	/**
@@ -178,7 +166,7 @@ public class Application extends JFrame {
 		
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Salvar.LogicaSalvar(tarefas, lblStatus);
 		    }
 		});
 	}

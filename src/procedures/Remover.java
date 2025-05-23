@@ -1,7 +1,6 @@
 package procedures;
 
 import java.util.ArrayList;
-import procedures.AtualizarPainel;
 import javax.swing.JPanel;
 
 public class Remover {
