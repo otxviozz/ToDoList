@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import main.Application;
 
 public class AtualizarPainel {
-    public static void atualizarPainelTarefas(JPanel painelTarefas, java.util.ArrayList<String> tarefas) {
+	public static void atualizarPainelTarefas(JPanel painelTarefas, ArrayList<String> tarefas) {
         painelTarefas.removeAll();
 
         for (int i = 1; i < tarefas.size(); i++) {

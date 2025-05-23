@@ -51,6 +51,7 @@ public class Application extends JFrame {
 	public static JLabel lblStatus;
 	public static String path = "";
 	public static ArrayList<String> tarefas = new ArrayList<>();
+	public static JPanel painelTarefas;
 	
 	/**
 	 * Launch the application.
@@ -82,7 +83,7 @@ public class Application extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JPanel painelTarefas = new JPanel();
+		painelTarefas = new JPanel();
 		painelTarefas.setLayout(new BoxLayout(painelTarefas, BoxLayout.Y_AXIS));
 		painelTarefas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -163,12 +164,6 @@ public class Application extends JFrame {
 			}
 		});
 		
-		btnConfirmar.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-		    	
-		    }
-		});
-		
 		btnInserir.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	ShowInserir.AparecerInserir(campoTarefa, rdbtnNaoIniciado, rdbtnEmAndamento, rdbtnConcluido, painelStatus, lblStatus, btnConfirmar, tarefas, painelTarefas);
@@ -177,7 +172,7 @@ public class Application extends JFrame {
 		
 		btnCarregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Carregar.LogicaCarregar();
 		    }
 		});
 		
