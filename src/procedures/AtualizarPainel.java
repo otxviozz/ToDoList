@@ -12,8 +12,6 @@ public class AtualizarPainel {
 
         for (int i = 1; i < tarefas.size(); i++) {
             String tarefa = tarefas.get(i);
-            String[] partes = tarefa.split(",");
-
             JPanel linha = new JPanel(new BorderLayout());
             linha.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
