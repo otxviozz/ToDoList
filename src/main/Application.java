@@ -22,8 +22,8 @@ import javax.swing.border.EmptyBorder;
 
 import procedures.AtualizarPainel;
 import procedures.Carregar;
+import procedures.Inserir;
 import procedures.Salvar;
-import show.ShowInserir;
 
 public class Application extends JFrame {
 
@@ -154,7 +154,8 @@ public class Application extends JFrame {
 		
 		btnInserir.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	ShowInserir.AparecerInserir(campoTarefa, rdbtnNaoIniciado, rdbtnEmAndamento, rdbtnConcluido, painelStatus, lblStatus, btnConfirmar, tarefas, painelTarefas);
+		        Inserir.LogicaInserir(campoTarefa, rdbtnNaoIniciado, rdbtnEmAndamento, rdbtnConcluido,
+		                              painelStatus, lblStatus, btnConfirmar, tarefas, painelTarefas);
 		    }
 		});
 		
